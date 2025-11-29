@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pathfinder 8 — Slider Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- responsive background image wrapper (shown when body.use-bg-image is present) -->
+    <div id="bg-wrapper" aria-hidden="true" class="bg-hidden"><img src="../Frames/BackgroundImage.jpg" alt="" /></div>
+    <header>
+        <h1>Pathfinder 8 — Slider Puzzle</h1>
+    </header>
+
+    <main>
+        <!-- Panel: Start (single centered Start button) -->
+        <div id="panel-start" class="panel">
+            <div class="panel-card">
+                <h1>Pathfinder 8</h1>
+                <p>An interactive 8-puzzle game </p>
+                <div class="panel-actions">
+                    <button id="btn-start">Start Game</button>
+                    <button id="btn-howto">How to Play</button>
+                    <button id="btn-exit">Exit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel: Mode selection (appears after Start) -->
+        <div id="panel-mode" class="panel panel-hidden">
+            <div class="panel-card">
+                <h2>Choose Mode</h2>
+                <div class="panel-actions">
+                    <button id="mode-normal">Normal</button>
+                    <div class="mode-row"><input id="mode-timer-input" type="number" min="10" value="60"
+                            style="width:90px" /><button id="mode-timer">Timer</button></div>
+                    <div class="mode-row"><input id="mode-move-input" type="number" min="5" value="50"
+                            style="width:90px" /><button id="mode-limited">Limited Moves</button></div>
+                    <button id="mode-back">Back</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel: How To Play -->
+        <div id="panel-howto" class="panel panel-hidden">
+            <div class="panel-card">
+                <div class="howto-card">
+                    <h2>How to Play</h2>
+                    <div class="panel-content">
+                        <div class="howto-text">
+                            <p>Click a tile adjacent to the empty space to slide it. Arrange tiles in order with the
+                                empty
+                                space last.</p>
+                            <p>Use <strong>New</strong> to randomize a solvable board, and <strong>Reset</strong> to
+                                restore
+                                the
+                                board you started the session with. Try the solver with <strong>Solve For Me</strong> or
+                                step
+                                through the solution with <strong>Step</strong>.</p>
+                            <p>Choose a mode from the Start screen: <em>Normal</em>, <em>Timer</em> (countdown), or
+                                <em>Limited
+                                    Moves</em>.
+                            </p>
+                        </div>
+                        <div class="howto-illustration" aria-hidden="true">
+                            <!-- Simple inline SVG board illustration (3x3) duplicated to match the real board -->
+                            <svg viewBox="0 0 360 360" width="320" height="320" xmlns="http://www.w3.org/2000/svg"
+                                role="img">
+                                <defs>
+                                    <linearGradient id="bgg" x1="0" x2="0" y1="0" y2="1">
+                                        <stop offset="0" stop-color="#6b3f2a" />
+                                        <stop offset="1" stop-color="#4b2a18" />
+                                    </linearGradient>
+                                    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+                                        <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000"
+                                            flood-opacity="0.25" />
+                                    </filter>
+                                </defs>
+                                <!-- board background -->
+                                <rect x="10" y="10" rx="16" ry="16" width="340" height="340" fill="url(#bgg)" />
+                                <rect x="22" y="22" rx="10" ry="10" width="316" height="316" fill="#8b6b50"
+                                    filter="url(#soft)" />
+
+                                <!-- tiles (3x3) -->
+                                <g font-family="sans-serif" font-weight="700" font-size="36" fill="#0b2430"
+                                    text-anchor="middle">
+                                    <!-- row 1 -->
+                                    <rect x="34" y="34" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="80" y="92">1</text>
+                                    <rect x="134" y="34" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="180" y="92">2</text>
+                                    <rect x="234" y="34" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="280" y="92">3</text>
+
+                                    <!-- row 2 -->
+                                    <rect x="34" y="134" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="80" y="192">4</text>
+                                    <rect x="134" y="134" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="180" y="192">5</text>
+                                    <rect x="234" y="134" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="280" y="192">6</text>
+
+                                    <!-- row 3 -->
+                                    <rect x="34" y="234" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="80" y="292">7</text>
+                                    <rect x="134" y="234" width="92" height="92" rx="10" fill="#d7e3e6" stroke="#2e6b82"
+                                        stroke-width="3" />
+                                    <text x="180" y="292">8</text>
+                                    <!-- empty tile represented by subtle inset -->
+                                    <rect x="234" y="234" width="92" height="92" rx="10" fill="#9da8ad"
+                                        opacity="0.05" />
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="panel-actions">
+                        <button id="howto-back" class="howto-btn">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel: Exit -->
+        <div id="panel-exit" class="panel panel-hidden">
+            <div class="panel-card">
+                <h2>Thanks for visiting</h2>
+                <p>You can close this tab or press Return to go back.</p>
+                <div class="panel-actions"><button id="exit-back">Return</button></div>
+            </div>
+        </div>
+
+        <!-- Panel: Game (controls and board inside a centered card) -->
+        <div id="panel-game" class="panel panel-hidden">
+            <div class="panel-card game-panel">
+                <section class="controls">
+                    <div class="controls-left">
+                        <label for="size">Size:</label>
+                        <select id="size">
+                            <option value="3">3 × 3</option>
+                        </select>
+                        <button id="toggleTheme" title="Toggle theme">Wooden</button>
+                    </div>
+                    <div class="controls-right">
+                        <button id="shuffle" class="btn-new">New</button>
+                        <button id="reset" class="btn-reset">Reset</button>
+                        <button id="solve" class="btn-solve">Solve For Me</button>
+                        <button id="step" class="btn-step">Step</button>
+                        <button id="btn-menu" class="btn-menu">Menu</button>
+                    </div>
+                    <div class="controls-center">
+                        <div id="moves-box">
+                            <div id="moves">Moves: 0</div>
+                            <div id="moves-remaining"></div>
+                        </div>
+                        <div id="time-box">
+                            <div id="timer">Time: 0s</div>
+                        </div>
+                        <div id="status" class="info-box"></div>
+                        <div id="solver-stats" class="info-box"></div>
+                    </div>
+                </section>
+
+                <section id="board" class="board"></section>
+            </div>
+        </div>
+
+
+    </main>
+
+    <script src="solver.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

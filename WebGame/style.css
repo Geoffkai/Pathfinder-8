@@ -1,0 +1,820 @@
+:root {
+    --tile-size: 80px;
+    --gap: 8px;
+    /* wooden theme variables */
+    --wood-bg: linear-gradient(180deg, #b0895a, #8b5a2b);
+    --tile-wood-light: linear-gradient(180deg, #f3deb1, #e0c28a);
+    /* classic (initial) theme variables */
+    --classic-bg: radial-gradient(circle at 50% 10%, #9b5b2f, #7a3e1d 40%, #7a3e1d 60%, #c99b75 100%);
+    --classic-board: linear-gradient(180deg, #f6dec2, #e6b98b);
+    --classic-tile: linear-gradient(180deg, #c46b38, #9e4a26);
+    --classic-tile-text: #fff2e8;
+    /* additional wooden styling variables */
+    --wood-frame-dark: #6b3f22;
+    --wood-frame-mid: #cda77a;
+    --wood-panel: linear-gradient(180deg, #f6e6cf, #e9cf9c);
+    --tile-surface-light: linear-gradient(180deg, #f7e6c8, #e5cfa4);
+    --tile-edge-dark: #b98653;
+    --logo-accent: #c27b2f;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+html {
+    overflow-y: scroll;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 20px;
+}
+
+header h1 {
+    margin: 0 0 12px 0
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px
+}
+
+/* Controls layout tweaks: left/right/center areas */
+.controls-left,
+.controls-right,
+.controls-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Style the control buttons to match the wireframe: pill buttons with subtle shadow */
+.controls button,
+.panel-actions button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12), inset 0 -4px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* Specific control button styles by class so layout and order can change safely */
+.controls-right .btn-new {
+    background: #61a5ff;
+    color: #07182a;
+}
+
+.controls-right .btn-reset {
+    background: #61a5ff;
+    color: #07182a;
+}
+
+.controls-right .btn-solve {
+    background: #f1c27d;
+    color: #2b1b11;
+}
+
+.controls-right .btn-step {
+    background: #e2e2e2;
+    color: #171717;
+}
+
+.controls-right .btn-menu {
+    background: #9ec5ff;
+    color: #07182a;
+}
+
+/* Moves box: fixed width so the layout doesn't jump when the number changes */
+#moves-box {
+    min-width: 160px;
+    max-width: 220px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #ffffff, #f3f3f3);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    /* center content vertically and horizontally to match time box */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* enforce identical visual height and box-sizing so the cards match */
+#moves-box,
+#time-box {
+    box-sizing: border-box;
+    min-height: 44px;
+    /* ensures both cards are same height even when moves has two lines */
+}
+
+/* Time box sits to the right of the moves box and mirrors its visual style */
+#time-box {
+    /* Match the moves card sizing so both appear identical */
+    min-width: 160px;
+    max-width: 220px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #ffffff, #f3f3f3);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    text-align: center;
+    /* center content vertically and horizontally to match moves box */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Make the timer text visually match the Moves card */
+#time-box #timer {
+    font-weight: 900;
+    font-size: 1.05rem;
+    color: #0b1320;
+    line-height: 1.1;
+}
+
+/* ensure the timer element itself doesn't add extra padding/margin */
+#time-box #timer {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* normalize the inner elements so both boxes measure the same visually */
+#moves,
+#moves-remaining,
+#time-box #timer {
+    margin: 0;
+    padding: 0;
+}
+
+#moves {
+    font-weight: 900;
+    font-size: 1.05rem;
+    color: #0b1320;
+}
+
+#moves-remaining {
+    font-size: .85rem;
+    color: #4d4d4d;
+}
+
+/* Info boxes for timer/status to keep sizes stable */
+.info-box {
+    min-width: 120px;
+    text-align: center;
+    color: #2b2b2b;
+}
+
+/* board becomes an absolute-positioned tile container so tiles can slide smoothly */
+#board {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    /* wooden framed board look */
+    background: linear-gradient(180deg, #eeddc8, #e1c89a);
+    box-shadow: inset 0 4px 8px rgba(255, 255, 255, 0.35), 0 8px 20px rgba(0, 0, 0, 0.28);
+    border-radius: 12px;
+    padding: 12px;
+    border: 10px solid var(--wood-frame-dark);
+    width: auto;
+    /* promote board to its own layer and contain painting to avoid repaints/twitching */
+    transform: translateZ(0);
+    contain: paint;
+    overflow: visible;
+}
+
+/* decorative frame around the board using a pseudo element for deeper frame */
+#board::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    right: -18px;
+    top: -18px;
+    bottom: -18px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+}
+
+.tile {
+    width: var(--tile-size);
+    height: var(--tile-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* wooden tile surface: soft bevel, subtle grain */
+    background-color: #efd6b0;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(0, 0, 0, 0.02) 100%),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.015) 0 2px, transparent 2px 8px);
+    color: #6b3f20;
+    font-weight: 900;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    user-select: none;
+    position: absolute;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.32), inset 0 -8px 14px rgba(0, 0, 0, 0.06);
+    transition: transform 360ms cubic-bezier(.2, .8, .2, 1), box-shadow 300ms cubic-bezier(.2, .8, .2, 1), opacity 200ms;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.tile:hover {
+    /* avoid vertical translate which can cause elements to escape and trigger layout changes */
+    transform: scale(1.03);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.34);
+}
+
+.tile.empty {
+    background: transparent;
+    box-shadow: none;
+    cursor: default;
+}
+
+.tile:active {
+    transform: scale(0.995);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+/* Highlight tiles that are in their correct position */
+.tile.correct {
+    /* greenish background, keep wood grain subtle by blending with original */
+    background-image: linear-gradient(180deg, rgba(198, 237, 207, 0.95), rgba(172, 230, 183, 0.95)),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.01) 0 2px, transparent 2px 8px);
+    border-color: rgba(44, 160, 44, 0.9);
+    box-shadow: 0 12px 30px rgba(44, 160, 44, 0.12), 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 -6px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* label color on correct tiles — dark green for contrast */
+.tile.correct .label {
+    color: #08340b;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.tile .label {
+    font-size: calc(var(--tile-size) * 0.55);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 0.6px;
+    color: #5a2f14;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+    line-height: 1;
+    margin: 0;
+}
+
+/* Start screen overlay styles */
+.start-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 60;
+}
+
+.start-card {
+    background: var(--wood-panel);
+    border-radius: 14px;
+    padding: 22px;
+    min-width: 320px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.6);
+    text-align: center;
+}
+
+/* Panels */
+.panel {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 80;
+}
+
+.panel-hidden {
+    display: none;
+}
+
+.panel-card {
+    background: var(--wood-panel);
+    padding: 28px;
+    border-radius: 14px;
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.6);
+    border: 8px solid var(--wood-frame-dark);
+    min-width: 360px;
+    text-align: center;
+}
+
+/* specific layout tweaks for the game panel (center controls and board) */
+.panel-card.game-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 28px 36px;
+    max-width: 920px;
+}
+
+.panel-card.game-panel .controls {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.panel-card.game-panel .controls .controls-left,
+.panel-card.game-panel .controls .controls-right,
+.panel-card.game-panel .controls .controls-center {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.panel-card.game-panel .controls .controls-center {
+    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.panel-card.game-panel #board {
+    margin: 0 auto;
+}
+
+.panel-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.panel-actions button {
+    padding: 12px 20px;
+    border-radius: 18px;
+    border: none;
+    background: linear-gradient(180deg, var(--logo-accent), #b76a2a);
+    color: #2b1b11;
+    font-weight: 800;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12), inset 0 -4px 6px rgba(0, 0, 0, 0.06);
+    transition: transform 160ms ease, box-shadow 160ms;
+}
+
+.panel-actions button:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+.mode-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel-content {
+    max-width: 520px;
+    text-align: left;
+}
+
+.start-card h1 {
+    margin: 0 0 12px 0;
+    font-size: 22px
+}
+
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+.start-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center
+}
+
+.start-card button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background: #dba24a;
+    color: #2b1b11;
+    font-weight: 700;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+}
+
+.start-card input {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc
+}
+
+/* Win overlay that covers only the playing board */
+.win-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.32);
+    z-index: 999;
+    pointer-events: auto;
+}
+
+.win-card {
+    padding: 18px 20px;
+    border-radius: 12px;
+    min-width: 260px;
+    max-width: 92%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    background: linear-gradient(180deg, #fffefa, #fff7f0);
+    border: 6px solid rgba(0, 0, 0, 0.06);
+}
+
+.win-card>div {
+    margin-bottom: 8px;
+}
+
+.win-btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 800;
+    background: #fff;
+}
+
+.win-btn.do-another {
+    border-color: var(--logo-accent);
+    color: var(--logo-accent);
+}
+
+.win-btn.menu-btn {
+    border-color: #9ec5ff;
+    color: #0b3650;
+}
+
+.win-btn.try-again {
+    border-color: var(--logo-accent);
+    color: var(--logo-accent);
+}
+
+/* Theme-aware button colors */
+.theme-wood .win-card {
+    background: var(--wood-panel);
+    border-color: var(--wood-frame-mid);
+}
+
+.theme-wood .win-btn {
+    background: linear-gradient(180deg, #fff6ea, #f5ead6);
+    border-color: var(--logo-accent);
+}
+
+.theme-wood .win-btn.do-another {
+    background: var(--logo-accent);
+    color: #fff;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+.theme-wood .win-btn.menu-btn {
+    background: transparent;
+    color: var(--wood-frame-dark);
+    border-color: var(--wood-frame-dark);
+}
+
+.theme-classic .win-card {
+    background: linear-gradient(180deg, #ffffff, #f3f7fb);
+    border-color: rgba(0, 0, 0, 0.06);
+}
+
+.theme-classic .win-btn {
+    background: #fff;
+}
+
+.theme-classic .win-btn.do-another {
+    background: #61a5ff;
+    color: #07182a;
+    border-color: #61a5ff;
+}
+
+.theme-classic .win-btn.menu-btn {
+    background: #f1c27d;
+    color: #2b1b11;
+    border-color: #f1c27d;
+}
+
+@media (max-width:420px) {
+    :root {
+        --tile-size: 56px
+    }
+
+    .start-card {
+        min-width: 240px
+    }
+}
+
+.notes {
+    margin-top: 16px
+}
+
+.controls button,
+.controls select {
+    padding: 6px 10px
+}
+
+#status {
+    margin-left: 12px;
+    font-weight: 600
+}
+
+@media (max-width:420px) {
+    :root {
+        --tile-size: 56px
+    }
+}
+
+/* Theme classes: .theme-classic (default) and .theme-wood */
+.theme-classic body,
+.theme-classic body * {
+    transition: background-color 420ms ease, color 320ms ease;
+}
+
+.theme-classic #board {
+    background: var(--classic-board);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.theme-classic .tile {
+    background: var(--classic-tile);
+    color: var(--classic-tile-text);
+    border-radius: 10px
+}
+
+.theme-wood #board {
+    background: var(--wood-bg);
+    box-shadow: inset 0 6px 14px rgba(255, 255, 255, 0.06), 0 8px 20px rgba(0, 0, 0, 0.35);
+    border: 6px solid rgba(0, 0, 0, 0.15);
+}
+
+.theme-wood .tile {
+    background: var(--tile-wood-light);
+    /* color: #2b1f10; */
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28), inset 0 -4px 6px rgba(0, 0, 0, 0.06);
+}
+
+/* subtle page background gradient for classic theme like example */
+.theme-classic body {
+    background: radial-gradient(circle at top, rgba(156, 86, 44, 0.95), rgba(119, 64, 32, 0.9) 40%, rgba(197, 143, 104, 0.7) 100%);
+}
+
+.theme-wood body {
+    background: linear-gradient(180deg, #8a4f26, #cfa77e);
+}
+
+/* Use an image from the repository Frames folder if available. */
+/* When using the repository background image make it cover the full viewport
+   and remove page margins so there is no white strip at the bottom. Also
+   hide the page header and the extra How-to notes that appear above the
+   centered start panel so the wood background is clean. */
+body.use-bg-image {
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Background wrapper: an <img> fills the viewport using object-fit:cover */
+#bg-wrapper {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: -100;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+body.use-bg-image #bg-wrapper {
+    display: block;
+}
+
+#bg-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    filter: contrast(1.02) saturate(1.05);
+}
+
+/* hide header and the standalone notes section at top-left when background is active */
+body.use-bg-image header,
+body.use-bg-image>main>.notes {
+    display: none !important;
+}
+
+/* ensure panels and main content still position correctly when removing margins */
+body.use-bg-image .panel,
+body.use-bg-image .panel-card {
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+}
+
+/* ===== Correct-tile highlights (theme-aware) ===== */
+/* Base correct tile: subtle lift and transitions */
+.tile.correct {
+    transition: background 260ms ease, box-shadow 260ms ease, border-color 260ms ease, transform 220ms ease, filter 220ms ease;
+    transform: translateZ(0) scale(1.01);
+    filter: brightness(1.04) saturate(1.02);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.20), inset 0 -6px 10px rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Classic theme: cool teal highlight */
+.theme-classic .tile.correct {
+    background-image: linear-gradient(180deg, rgba(232, 245, 250, 0.98), rgba(207, 235, 245, 0.96));
+    border-color: rgba(72, 138, 170, 0.9);
+    box-shadow: 0 14px 30px rgba(64, 120, 150, 0.12), 0 8px 20px rgba(0, 0, 0, 0.18), inset 0 -6px 10px rgba(0, 0, 0, 0.03);
+}
+
+.theme-classic .tile.correct .label {
+    color: #062a36;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Wooden theme: warm creamy/golden highlight */
+.theme-wood .tile.correct {
+    background-image: linear-gradient(180deg, rgba(255, 247, 232, 0.98), rgba(250, 235, 208, 0.96));
+    border-color: rgba(180, 110, 40, 0.92);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.22), 0 0 18px rgba(246, 236, 217, 0.16), inset 0 -6px 12px rgba(0, 0, 0, 0.04);
+}
+
+.theme-wood .tile.correct .label {
+    color: #5a3818;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Keyboard focus accessibility for correct tiles */
+.tile.correct:focus {
+    outline: 3px solid rgba(255, 255, 255, 0.18);
+    outline-offset: 4px;
+}
+
+/* Illustration container inside How-To (appended) */
+.howto-card {
+    /* default card styling for the white inner area */
+}
+
+.howto-card .panel-content {}
+
+#panel-howto .howto-card {
+    max-width: 540px;
+    width: calc(100% - 40px);
+    margin: 12px auto;
+    /* center the white card within the panel */
+    /* slight visual nudge left so the white inner card appears centered against the wood frame */
+    transform: translateX(-8px);
+    padding: 22px 26px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #ffffff, #fbfaf7);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border: 6px solid rgba(0, 0, 0, 0.06);
+    text-align: left;
+}
+
+#panel-howto .howto-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    text-align: center;
+    font-weight: 700;
+}
+
+#panel-howto .howto-card .panel-content {
+    color: var(--text-color, #222);
+    font-size: 15px;
+    line-height: 1.45;
+    margin-bottom: 18px;
+}
+
+#panel-howto .howto-card .panel-content p {
+    margin: 8px 0;
+}
+
+#panel-howto .panel-actions {
+    text-align: center;
+}
+
+.howto-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.09);
+    transition: transform .12s ease, box-shadow .12s ease;
+    background: var(--accent, #4b9cff);
+    color: white;
+}
+
+.howto-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* Theme-aware variant: wooden theme uses a warmer card background */
+body.theme-wood #panel-howto .howto-card {
+    background: linear-gradient(180deg, #fffefa, #fff6ed);
+    border: 8px solid rgba(76, 44, 16, 0.12);
+    box-shadow: 0 12px 30px rgba(38, 20, 8, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+body.theme-wood .howto-btn {
+    background: var(--wood-accent, #4b8ef7);
+}
+
+/* Slightly smaller on narrow screens */
+@media (max-width: 520px) {
+    #panel-howto .howto-card {
+        padding: 16px;
+        border-radius: 10px;
+    }
+
+    #panel-howto .howto-card h2 {
+        font-size: 18px;
+    }
+}
+
+.howto-illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 0 14px 0;
+}
+
+.howto-illustration svg {
+    width: 280px;
+    max-width: 86%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+/* Slightly larger on wide screens so the illustration is more prominent */
+@media (min-width: 900px) {
+    .howto-illustration svg {
+        width: 340px;
+    }
+}
+
+/* Layout: place text on left and illustration on right for How-To card */
+#panel-howto .howto-card .panel-content {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+}
+
+.howto-text {
+    flex: 1 1 40%;
+}
+
+.howto-illustration {
+    flex: 0 0 340px;
+}
+
+@media (max-width: 720px) {
+    #panel-howto .howto-card .panel-content {
+        flex-direction: column;
+    }
+
+    .howto-illustration {
+        order: -1;
+        width: 100%;
+    }
+
+    .howto-illustration svg {
+        width: 86%;
+    }
+}
+
+@media (max-width: 720px) {
+
+    /* remove the left nudge on narrow screens to keep the layout flush */
+    #panel-howto .howto-card {
+        transform: none;
+    }
+}
