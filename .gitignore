@@ -7,5 +7,5 @@
 # Track only the top-level `src/` directory and its contents
 !/WebGame/
 !/WebGame/**
-
+!BackgroundImage.jpg
 # (All other files/folders are intentionally ignored)
