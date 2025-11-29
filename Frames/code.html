@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder 8 - Wooden Puzzle</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #8B4513, #D2B48C); /* Wood-like background */
+            margin: 0;
+        }
+        h1 {
+            color: #FFF8DC;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        .puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 8px;
+            border: 5px solid #654321; /* Dark wood border */
+            padding: 15px;
+            background: linear-gradient(45deg, #DEB887, #F5DEB3); /* Wood grain effect */
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            width: 350px;
+            height: 350px;
+            border-radius: 10px;
+        }
+        .tile {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #CD853F, #A0522D); /* Wooden tile gradient */
+            color: #FFF8DC;
+            font-size: 28px;
+            font-weight: bold;
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            box-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; /* Smooth hover effect */
+        }
+        .tile:hover {
+            transform: scale(1.05); /* Slight lift on hover */
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+        }
+        .empty {
+            background: linear-gradient(135deg, #F5DEB3, #DEB887); /* Lighter wood for empty */
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .empty:hover {
+            transform: none; /* No lift for empty */
+        }
+        .game-controls {
+            margin-top: 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: #FFF8DC;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #A0522D, #8B4513);
+        }
+    </style>
+</head>
+<body>
+    <h1>Pathfinder 8 Puzzle</h1>
+    <div class="puzzle-container" id="puzzle">
+        <!-- Static tiles: 1-8 and empty -->
+        <div class="tile">1</div>
+        <div class="tile">2</div>
+        <div class="tile">3</div>
+        <div class="tile">4</div>
+        <div class="tile">5</div>
+        <div class="tile">6</div>
+        <div class="tile">7</div>
+        <div class="tile">8</div>
+        <div class="tile empty"></div> <!-- Empty space -->
+    </div>
+    <div class="game-controls">
+        <button>New Game</button> <!-- Placeholder, non-functional -->
+    </div>
+
+    <script>
+        // No functionalities added - just static rendering with enhanced visuals
+        console.log("Pathfinder 8 Wooden GUI loaded. No interactive features implemented.");
+    </script>
+</body>
+</html>

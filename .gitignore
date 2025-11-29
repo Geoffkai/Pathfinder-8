@@ -1,0 +1,33 @@
+# Ignore everything by default
+/*
+
+# Keep this .gitignore file
+!.gitignore
+
+# Keep web game source and its assets
+!/WebGame
+!/WebGame/**
+
+# Keep frames/assets used by the web game
+!/Frames
+!/Frames/**
+
+# Keep Java source code in the Slider-Puzzle module
+!/Slider-Puzzle
+!/Slider-Puzzle/src
+!/Slider-Puzzle/src/**
+
+# Common files to ignore even if present elsewhere
+/.idea/
+/.vscode/
+*.iml
+*.class
+*.jar
+bin/
+build/
+out/
+lib/
+node_modules/
+*.log
+Thumbs.db
+.DS_Store
