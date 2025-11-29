@@ -1,33 +1,11 @@
 # Ignore everything by default
-/*
+*
 
-# Keep this .gitignore file
+# But keep this gitignore so the rule itself is tracked
 !.gitignore
 
-# Keep web game source and its assets
-!/WebGame
+# Track only the top-level `src/` directory and its contents
+!/WebGame/
 !/WebGame/**
 
-# Keep frames/assets used by the web game
-!/Frames
-!/Frames/**
-
-# Keep Java source code in the Slider-Puzzle module
-!/Slider-Puzzle
-!/Slider-Puzzle/src
-!/Slider-Puzzle/src/**
-
-# Common files to ignore even if present elsewhere
-/.idea/
-/.vscode/
-*.iml
-*.class
-*.jar
-bin/
-build/
-out/
-lib/
-node_modules/
-*.log
-Thumbs.db
-.DS_Store
+# (All other files/folders are intentionally ignored)
