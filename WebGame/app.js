@@ -281,7 +281,7 @@ function ensureWinOverlay(){
   const title = document.createElement('div'); title.textContent = 'Congratulations!'; title.style.fontSize='20px'; title.style.fontWeight='700'; title.style.marginBottom='6px';
   const sub = document.createElement('div'); sub.textContent = 'You solved the puzzle.'; sub.style.marginBottom='12px';
   const btnRow = document.createElement('div'); btnRow.style.display='flex'; btnRow.style.justifyContent='center'; btnRow.style.gap='10px';
-  const doAnother = document.createElement('button'); doAnother.textContent='Do Another!';
+  const doAnother = document.createElement('button'); doAnother.textContent='Try Again!';
   const menu = document.createElement('button'); menu.textContent='Menu';
   // add semantic classes so CSS theme rules can style them
   doAnother.classList.add('win-btn','do-another');

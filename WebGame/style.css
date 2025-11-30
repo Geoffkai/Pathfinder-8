@@ -1,6 +1,8 @@
 :root {
     --tile-size: 80px;
     --gap: 8px;
+    --hover-overlay: rgba(255, 255, 255, 0.12);
+    --hover-overlay-wood: rgba(255, 255, 255, 0.06);
     /* wooden theme variables */
     --wood-bg: linear-gradient(180deg, #b0895a, #8b5a2b);
     --tile-wood-light: linear-gradient(180deg, #f3deb1, #e0c28a);
@@ -367,7 +369,7 @@ header h1 {
     color: #2b1b11;
     font-weight: 800;
     box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12), inset 0 -4px 6px rgba(0, 0, 0, 0.06);
-    transition: transform 160ms ease, box-shadow 160ms;
+    transition: background-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
 }
 
 .panel-actions button:active {
@@ -735,6 +737,39 @@ body.use-bg-image .panel-card {
     box-shadow: 0 3px 0 rgba(0, 0, 0, 0.08);
 }
 
+/* Unified hover and focus styles for buttons (non-moving highlight).
+   Targets actual buttons and prominent button-like controls only
+   — leaves theme frames and structural elements unchanged. */
+button,
+.panel-actions button,
+.start-card button,
+.controls button,
+.howto-btn,
+.win-btn {
+    transition: box-shadow 180ms ease, background-color 180ms ease, color 160ms ease, filter 160ms ease;
+    will-change: box-shadow, filter;
+}
+
+button:hover,
+.panel-actions button:hover,
+.start-card button:hover,
+.controls button:hover,
+.howto-btn:hover,
+.win-btn:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+button:focus-visible,
+.panel-actions button:focus-visible,
+.start-card button:focus-visible,
+.controls button:focus-visible,
+.howto-btn:focus-visible,
+.win-btn:focus-visible {
+    outline: 3px solid rgba(66, 133, 244, 0.18);
+    outline-offset: 4px;
+}
+
 /* Theme-aware variant: wooden theme uses a warmer card background */
 body.theme-wood #panel-howto .howto-card {
     background: linear-gradient(180deg, #fffefa, #fff6ed);
@@ -816,5 +851,55 @@ body.theme-wood .howto-btn {
     /* remove the left nudge on narrow screens to keep the layout flush */
     #panel-howto .howto-card {
         transform: none;
+    }
+}
+
+/* Site footer styled like the example: small centered copyright with highlighted name */
+.site-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: #9fb6d8;
+    padding: 8px 12px;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+}
+
+.site-footer-inner {
+    max-width: 980px;
+    width: 100%;
+    text-align: center;
+}
+
+.site-footer .copyright {
+    color: #98a9bb;
+    margin-right: 6px;
+    font-size: 13px;
+}
+
+.site-footer .footer-link {
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: transparent;
+    transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.site-footer .footer-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* Ensure footer doesn't overlap essential UI on small viewports */
+@media (max-height: 520px) {
+    .site-footer {
+        position: static;
+        margin-top: 12px;
     }
 }
