@@ -53,22 +53,29 @@ let elapsedInterval = null;
 
 // Menu / Start screen elements will be hooked up later
 
-
+//Creates and returns an array that represents a goal state for the puzzle
 function makeGoal(n){
   const a = [];
-  for(let i=1;i<=n*n;i++) a.push(i===n*n?0:i);
+  for(let i = 1;i <= n*n; i++) {
+    a.push(i=== n*n ? 0 : i);
+  } 
   return a;
 }
 
+//For retrieval of CSS variable
 function getCssPx(varName){
   const raw = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
   return parseInt(raw,10) || 0;
 }
 
 function layoutBoardContainer(){
+  //Get the CSS variable values for tile size and gap
   const tileSize = getCssPx('--tile-size');
   const gap = getCssPx('--gap');
+
+  //Calculate the inner size of the board (excluding padding and borders)
   const inner = n*tileSize + (n-1)*gap;
+
   // read actual paddings and borders from computed styles so JS matches CSS
   const cs = getComputedStyle(boardEl);
   const padLeft = parseInt(cs.paddingLeft,10) || 0;
@@ -90,7 +97,7 @@ function createTiles(){
   // clear existing
   tileEls.forEach(el=>el.remove()); tileEls.clear();
   // create one element per value (including 0 for empty)
-  for(let v=0; v<n*n; v++){
+  for(let v = 0; v < n * n; v++){
     const tile = document.createElement('div');
     tile.className = 'tile' + (v===0 ? ' empty' : '');
     tile.dataset.value = v;

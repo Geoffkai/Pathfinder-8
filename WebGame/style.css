@@ -521,6 +521,25 @@ header h1 {
     border-color: #f1c27d;
 }
 
+/* Ensure classic theme buttons receive the same non-moving hover/focus treatment */
+.theme-classic .panel-actions button:hover,
+.theme-classic .start-card button:hover,
+.theme-classic .controls button:hover,
+.theme-classic .howto-btn:hover,
+.theme-classic .win-btn:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+}
+
+.theme-classic .panel-actions button:focus-visible,
+.theme-classic .start-card button:focus-visible,
+.theme-classic .controls button:focus-visible,
+.theme-classic .howto-btn:focus-visible,
+.theme-classic .win-btn:focus-visible {
+    outline: 3px solid rgba(97, 165, 255, 0.12);
+    outline-offset: 4px;
+}
+
 @media (max-width:420px) {
     :root {
         --tile-size: 56px
