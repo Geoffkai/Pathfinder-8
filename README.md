@@ -33,8 +33,7 @@ Click tiles adjacent to the empty space to slide them around. The fewer moves yo
 - `WebGame/index.html` — Game interface
 - `WebGame/style.css` — Styling and layout
 - `WebGame/app.js` — Game logic and interactions
-- `WebGame/solver.js` — Smart puzzle solver
-- `8-Puzzle/Slider-Puzzle/src/` — Java reference implementation
+- `WebGame/solver.js` — Smart puzzle solve
 
 ## Running the Game
 
