@@ -40,7 +40,7 @@ Click tiles adjacent to the empty space to slide them around. The fewer moves yo
 
 ```bash
 # Option 1: Just open the file
-Open the Link: [Pathfinder 8](https://pathfinder-8.netlify.app/)
+Open the Link: (https://pathfinder-8.netlify.app/)
 # Option 2: Use a local server (if you have Python)
 cd WebGame
 python -m http.server 8000
