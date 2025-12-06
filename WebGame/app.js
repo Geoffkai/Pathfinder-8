@@ -305,6 +305,8 @@ function ensureWinOverlay(){
     shuffleSolvable();
     initialState = state.slice();
     gameActive = true;
+    // reset elapsed timer when trying again
+    startElapsedTimer();
     updateTiles();
   });
   menu.addEventListener('click', ()=>{
@@ -413,10 +415,8 @@ resetBtn.addEventListener('click', ()=>{
     reset();
   }
   gameActive = true; 
-  // reset elapsed timer when restoring the initial board
   // cancel any running solution playback
   if(solutionAnim){ clearInterval(solutionAnim); solutionAnim = null; if(solveBtn) solveBtn.disabled = false; }
-  startElapsedTimer();
 });
 sizeEl.addEventListener('change', ()=>{ n = parseInt(sizeEl.value,10); reset(); });
 
