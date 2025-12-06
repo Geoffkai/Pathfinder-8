@@ -17,7 +17,7 @@ Click tiles adjacent to the empty space to slide them around. The fewer moves yo
 
 ## How to Play
 
-1. **Open the game**: Open [Pathfinder 8](https://pathfinder-8.netlify.app/) in a modern browser (just double-click!).
+1. **Open the game**: Open [Pathfinder 8](https://geoffkai.github.io/Pathfinder-8/WebGame/) in a modern browser (just double-click!).
 2. **Shuffle**: Click the Shuffle button to randomize the tiles.
 3. **Solve**: Click tiles to move them, or use **Auto-Solve** to let the AI find the solution and watch it animate!
 
@@ -39,7 +39,7 @@ Click tiles adjacent to the empty space to slide them around. The fewer moves yo
 
 ```bash
 # Option 1: Just open the file
-Open the Link: (https://pathfinder-8.netlify.app/)
+Open the Link: (https://geoffkai.github.io/Pathfinder-8/WebGame/)
 # Option 2: Use a local server (if you have Python)
 cd WebGame
 python -m http.server 8000
